@@ -1,8 +1,29 @@
-name: Build-deploy
+name: Build-Deploy
 on:
   push:
-    branches: 
-      - main 
+    branches:
+      - main
 
+jobs:
+  build-app:
+    name: Build App
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          run-install: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Build project
+        env:
+          NODE_OPTIONS: --max_old_space_size=8192
+        run: pnpm run build
